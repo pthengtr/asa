@@ -11,19 +11,28 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { supabase } from "../lib/supabase";
 
-const numberClass = "text-6xl bg-gray-100 text-gray-700 hover:bg-gray-200";
-const gray100Class = "bg-gray-100 text-gray-700 hover:bg-gray-200";
-const gray400Class = "bg-gray-300 text-gray-800 hover:bg-gray-400";
-const gray500Class = "bg-gray-500 text-gray-100 hover:bg-gray-400";
-const yellow200Class = "bg-yellow-200 text-gray-800 hover:bg-yellow-300";
-const blue800Class = "bg-blue-800 text-gray-100 hover:bg-blue-700";
-const red500Class = "bg-red-700 text-gray-100 hover:bg-red-600";
-const green500Class = "bg-lime-500 text-gray-700 hover:bg-lime-400";
-const yellow400Class = "bg-yellow-400 text-gray-700 hover:bg-yellow-500";
-const textYellow = "text-yellow-500";
+const numberClass =
+  "text-6xl bg-[radial-gradient(circle,rgba(255,255,255,1)_0%,rgba(208,208,208,1)_100%)] text-gray-700";
+const gray100Class =
+  "bg-[radial-gradient(circle,rgba(255,255,255,1)_0%,rgba(208,208,208,1)_100%)] text-gray-700";
+const gray400Class =
+  "bg-[radial-gradient(circle,rgba(208,208,208,1)_0%,rgba(150,150,150,1)_100%)] text-gray-800";
+const gray500Class =
+  "bg-[radial-gradient(circle,rgba(140,140,140,1)_0%,rgba(100,100,100,1)_100%)] text-gray-100";
+const yellow200Class =
+  "bg-[radial-gradient(circle,#f6ff71_0%,#fdf919_100%)] text-gray-800";
+const blue800Class =
+  "bg-[radial-gradient(circle,#7885ff_0%,#3a2cfd_100%)] text-gray-100";
+const red500Class =
+  "bg-[radial-gradient(circle,#ff7878_0%,#fc2727_100%)] text-gray-100";
+const green500Class =
+  "bg-[radial-gradient(circle,#aeff78_0%,#27fc27_100%)] text-gray-700";
+const yellow400Class =
+  "bg-[radial-gradient(circle,#f6ff71_0%,#fdf919_100%)] text-gray-700";
+const textYellow = "text-yellow-400";
 const textGreen = "text-lime-500";
 
 type item_Type = {
@@ -179,8 +188,12 @@ export default function MainPage() {
       : 0.0;
   }
 
+  //   useEffect(() => {
+  //     document.documentElement.requestFullscreen();
+  //   }, []);
+
   return (
-    <main className="grid grid-cols-3 h-full">
+    <main id="main-ref" className="grid grid-cols-3 h-full">
       <section className="bg-green-700 col-span-2 h-[75vh] w-full">
         <div className="grid grid-cols-8 border gap-2 p-2">
           <div className="col-span-8">
@@ -201,7 +214,7 @@ export default function MainPage() {
           {buttonArray.map((button) => (
             <Button
               key={button.name}
-              className={`text-2xl shadow-lg text-wrap h-24 ${button.class}`}
+              className={`text-2xl shadow-lg text-wrap h-24 active:scale-[98%] hover:scale-[103%] ${button.class}`}
               onClick={() => button.func(button.name)}
             >
               {button.name}
