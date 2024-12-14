@@ -11,7 +11,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 import { supabase } from "../lib/supabase";
 
 const numberClass =
