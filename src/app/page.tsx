@@ -1,5 +1,10 @@
 import MainPage from "./component/MainPage";
+import PosProvider from "./component/PosProvider";
 
 export default function Home() {
-  return <MainPage />;
+  return (
+    <PosProvider>
+      <MainPage />
+    </PosProvider>
+  );
 }
