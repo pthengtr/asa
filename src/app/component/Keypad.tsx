@@ -28,6 +28,7 @@ export default function Keypad() {
     handleClickEnter,
     handleSubmitForm,
     handleClickPayamount,
+    handleClickPrint,
   } = useContext(PosContext) as PosContextType;
 
   const buttonArray = [
@@ -78,7 +79,7 @@ export default function Keypad() {
     },
     { name: "X", class: `${gray500Class} ${textYellow}`, func: handleClick },
     { name: "รายงานสต๊อก", class: yellow400Class, func: handleClick },
-    { name: "พิมใบเสร็จ", class: gray400Class, func: handleClick },
+    { name: "พิมใบเสร็จ", class: gray400Class, func: handleClickPrint },
   ];
 
   return (

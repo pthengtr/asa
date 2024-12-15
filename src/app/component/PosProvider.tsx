@@ -14,6 +14,8 @@ export type PosContextType = {
   setBillItems: (items: item_Type[] | undefined) => void;
   selectedItem: item_Type | undefined;
   setSelectedItem: (item: item_Type | undefined) => void;
+  shopId: string;
+  setShopId: (id: string) => void;
   handleClickNumber: (value: string) => void;
   handleClick: () => void;
   handleClickDelete: () => void;
@@ -21,10 +23,23 @@ export type PosContextType = {
   handleClickEnter: () => void;
   handleSubmitForm: (e: React.FormEvent<HTMLFormElement>) => void;
   handleClickPayamount: () => void;
+  handleClickPrint: () => void;
+  handleClickReportX: () => void;
   getTotalPrice: () => number;
 };
 
 export const PosContext = createContext<PosContextType | null>(null);
+
+export type transaction_type = {
+  S_TRANS: number;
+  S_DATE: string;
+  S_TIME: string;
+  S_ID: string;
+  E_ID: string;
+  I_ID: string;
+  S_QTY: number;
+  S_AMOUNT: number;
+};
 
 export type item_Type = {
   I_GRPID: string;
@@ -44,6 +59,7 @@ export default function PosProvider({ children }: PosProviderProps) {
   const [selectedItem, setSelectedItem] = useState<item_Type>();
   const [mode, setMode] = useState("search");
   const [paid, setPaid] = useState("");
+  const [shopId, setShopId] = useState("010");
 
   async function getProductById() {
     const query = supabase
@@ -146,6 +162,71 @@ export default function PosProvider({ children }: PosProviderProps) {
     setMode("payamount");
   }
 
+  async function handleClickPrint() {
+    const date = new Date();
+
+    const queryDate = date
+      .toLocaleDateString("th-TH", {
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric",
+      })
+      .substring(3);
+
+    const query = supabase
+      .from("_SAE")
+      .select(`*`)
+      .eq("S_ID", shopId)
+      .ilike("S_DATE", `%${queryDate}`)
+      .order("S_TRANS", { ascending: false })
+      .limit(1);
+
+    const { data, error } = await query;
+
+    if (error) {
+      console.log(error);
+      return;
+    }
+
+    const newTranId = data.length === 0 ? 1 : data[0].S_TRANS + 1;
+
+    if (!!billItems) {
+      const newTransactions: transaction_type[] = billItems.map((item) => ({
+        E_ID: "",
+        S_ID: shopId,
+        I_ID: item.I_ID,
+        S_TRANS: newTranId,
+        S_DATE: date.toLocaleDateString("th-TH", {
+          day: "2-digit",
+          month: "2-digit",
+          year: "numeric",
+        }),
+        S_TIME: date.toLocaleTimeString("th-TH", {
+          hour: "2-digit",
+          minute: "2-digit",
+        }),
+        S_AMOUNT: item.I_SHPSEL * item.qty,
+        S_QTY: item.qty,
+      }));
+
+      const { data, error } = await supabase
+        .from("_SAE")
+        .insert(newTransactions)
+        .select();
+
+      if (error) {
+        console.log(error);
+        return;
+      }
+
+      console.log(data);
+
+      setBillItems(undefined);
+    }
+  }
+
+  function handleClickReportX() {}
+
   function getTotalPrice() {
     return !!billItems
       ? billItems.reduce((acc, bill) => bill.I_SHPSEL * bill.qty + acc, 0)
@@ -163,6 +244,8 @@ export default function PosProvider({ children }: PosProviderProps) {
     setBillItems,
     selectedItem,
     setSelectedItem,
+    shopId,
+    setShopId,
     handleClick,
     handleClickNumber,
     handleClickDelete,
@@ -170,6 +253,8 @@ export default function PosProvider({ children }: PosProviderProps) {
     handleClickEnter,
     handleSubmitForm,
     handleClickPayamount,
+    handleClickPrint,
+    handleClickReportX,
     getTotalPrice,
   };
 
