@@ -2,11 +2,17 @@
 
 import Keypad from "./Keypad";
 import Receipt from "./Reciept";
+import Status from "./Status";
 
-export default function MainPage() {
+type MainPageParams = {
+  shop: string;
+};
+
+export default function MainPage({ shop }: MainPageParams) {
   //   useEffect(() => {
   //     document.documentElement.requestFullscreen();
   //   }, []);
+  console.log(shop);
 
   return (
     <main id="main-ref" className="grid grid-cols-3 h-full">
@@ -17,7 +23,9 @@ export default function MainPage() {
         <Receipt />
       </section>
       <section className="bg-purple-500 h-[25vh] w-full"></section>
-      <section className="bg-green-500 h-[25vh] w-full"></section>
+      <section className="bg-green-500 h-[25vh] w-full grid place-content-center">
+        <Status />
+      </section>
     </main>
   );
 }

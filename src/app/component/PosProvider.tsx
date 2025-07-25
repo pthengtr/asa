@@ -25,6 +25,7 @@ export type PosContextType = {
   handleClickPayamount: () => void;
   handleClickPrint: () => void;
   handleClickReportX: () => void;
+  handleClickReportZ: () => void;
   getTotalPrice: () => number;
 };
 
@@ -165,19 +166,10 @@ export default function PosProvider({ children }: PosProviderProps) {
   async function handleClickPrint() {
     const date = new Date();
 
-    const queryDate = date
-      .toLocaleDateString("th-TH", {
-        day: "2-digit",
-        month: "2-digit",
-        year: "numeric",
-      })
-      .substring(3);
-
     const query = supabase
       .from("_SAE")
       .select(`*`)
       .eq("S_ID", shopId)
-      .ilike("S_DATE", `%${queryDate}`)
       .order("S_TRANS", { ascending: false })
       .limit(1);
 
@@ -227,6 +219,8 @@ export default function PosProvider({ children }: PosProviderProps) {
 
   function handleClickReportX() {}
 
+  function handleClickReportZ() {}
+
   function getTotalPrice() {
     return !!billItems
       ? billItems.reduce((acc, bill) => bill.I_SHPSEL * bill.qty + acc, 0)
@@ -255,6 +249,7 @@ export default function PosProvider({ children }: PosProviderProps) {
     handleClickPayamount,
     handleClickPrint,
     handleClickReportX,
+    handleClickReportZ,
     getTotalPrice,
   };
 
